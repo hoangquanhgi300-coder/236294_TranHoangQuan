@@ -44,7 +44,7 @@ app.get('/api/devices', async (req, res) => {
     }
 });
 
-// Route dự phòng cho đường dẫn /api/students theo yêu cầu của bạn
+// Route dự phòng cho đường dẫn /api/students
 app.get('/api/students', async (req, res) => {
     try {
         const devices = await Device.find();
