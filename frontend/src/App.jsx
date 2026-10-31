@@ -2,7 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// Địa chỉ gốc của backend. Nếu VITE_API_URL lỡ có đuôi /api hoặc /api/devices thì tự cắt bỏ.
+const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000')
+  .replace(/\/api.*$/, '')
+  .replace(/\/+$/, '');
+
+// Tất cả request đều đi qua một đường dẫn duy nhất: /api/students
+const API_URL = `${API_BASE}/api/students`;
+
+const EMPTY_FORM = {
+  deviceId: '', name: '', deviceType: '', room: '', brand: '', model: '', quantity: 1, status: 'Đang sử dụng', description: ''
+};
 
 function App() {
   const [devices, setDevices] = useState([]);
@@ -11,17 +21,15 @@ function App() {
   const [error, setError] = useState('');
 
   // State cho form thêm/sửa thiết bị
-  const [formData, setFormData] = useState({
-    deviceId: '', name: '', deviceType: '', room: '', brand: '', model: '', quantity: 1, status: 'Đang sử dụng', description: ''
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState(null);
 
-  // 1. Lấy danh sách thiết bị trỏ trực tiếp đến /api/students
+  // 1. Lấy danh sách thiết bị: GET /api/students
   const fetchDevices = async (keyword = '') => {
     setLoading(true);
     setError('');
     try {
-      const url = keyword ? `${API_URL}/students?search=${keyword}` : `${API_URL}/students`;
+      const url = keyword ? `${API_URL}?search=${encodeURIComponent(keyword)}` : API_URL;
       const response = await axios.get(url);
       setDevices(response.data);
     } catch (err) {
@@ -46,13 +54,13 @@ function App() {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`${API_URL}/devices/${editingId}`, formData);
+        await axios.put(`${API_URL}/${editingId}`, formData);
         alert('Cập nhật thiết bị thành công!');
       } else {
-        await axios.post(`${API_URL}/devices`, formData);
+        await axios.post(API_URL, formData);
         alert('Thêm thiết bị mới thành công!');
       }
-      setFormData({ deviceId: '', name: '', deviceType: '', room: '', brand: '', model: '', quantity: 1, status: 'Đang sử dụng', description: '' });
+      setFormData(EMPTY_FORM);
       setEditingId(null);
       fetchDevices();
     } catch (err) {
@@ -64,7 +72,7 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa thiết bị này không?')) {
       try {
-        await axios.delete(`${API_URL}/devices/${id}`);
+        await axios.delete(`${API_URL}/${id}`);
         fetchDevices();
       } catch (err) {
         alert('Xóa thất bại: ' + err.message);
@@ -81,7 +89,7 @@ function App() {
   return (
     <div className="container my-4">
       <h2 className="text-center mb-4 text-primary fw-bold">HỆ THỐNG QUẢN LÝ THIẾT BỊ PHÒNG HỌC</h2>
-      
+
       {/* Hiển thị lỗi nếu có */}
       {error && <div className="alert alert-danger">{error}</div>}
 
@@ -130,7 +138,7 @@ function App() {
                 {editingId ? 'Cập nhật' : 'Thêm mới'}
               </button>
               {editingId && (
-                <button type="button" className="btn btn-secondary w-50" onClick={() => { setEditingId(null); setFormData({ deviceId: '', name: '', deviceType: '', room: '', brand: '', model: '', quantity: 1, status: 'Đang sử dụng', description: '' }); }}>
+                <button type="button" className="btn btn-secondary w-50" onClick={() => { setEditingId(null); setFormData(EMPTY_FORM); }}>
                   Hủy
                 </button>
               )}
@@ -141,12 +149,12 @@ function App() {
 
       {/* Thanh tìm kiếm */}
       <form onSubmit={handleSearch} className="input-group mb-4">
-        <input 
-          type="text" 
-          className="form-control" 
-          placeholder="Nhập từ khóa tìm kiếm (Mã thiết bị, tên, loại, phòng học)..." 
-          value={search} 
-          onChange={e => setSearch(e.target.value)} 
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Nhập từ khóa tìm kiếm (Mã thiết bị, tên, loại, phòng học)..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
         />
         <button className="btn btn-outline-primary" type="submit">Tìm kiếm</button>
         <button className="btn btn-outline-secondary" type="button" onClick={() => { setSearch(''); fetchDevices(); }}>Làm mới</button>
