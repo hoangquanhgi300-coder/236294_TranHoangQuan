@@ -33,3 +33,4 @@ cd frontend
 npm install
 npm run dev
 ```
+Hoàn thành tạo database Câu 2
