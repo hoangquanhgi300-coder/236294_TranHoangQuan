@@ -49,3 +49,4 @@ Hoàn thành tạo database Câu 2
    docker pull hoangquan21102005/device-frontend:latest
 ## Link Triển Khai (Live Demo)
 - Frontend URL: `https://two36294-tranhoangquan-frontend.onrender.com`
+- Backend API URL: `https://two36294-tranhoangquan-backend.onrender.com`
