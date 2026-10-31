@@ -16,12 +16,12 @@ function App() {
   });
   const [editingId, setEditingId] = useState(null);
 
-  // 1. Lấy danh sách thiết bị từ Backend API (có hỗ trợ tìm kiếm)
+  // 1. Lấy danh sách thiết bị trỏ trực tiếp đến /api/students
   const fetchDevices = async (keyword = '') => {
     setLoading(true);
     setError('');
     try {
-      const url = keyword ? `${API_URL}/devices?search=${keyword}` : `${API_URL}/devices`;
+      const url = keyword ? `${API_URL}/students?search=${keyword}` : `${API_URL}/students`;
       const response = await axios.get(url);
       setDevices(response.data);
     } catch (err) {
@@ -130,7 +130,7 @@ function App() {
                 {editingId ? 'Cập nhật' : 'Thêm mới'}
               </button>
               {editingId && (
-                <button type="button શરીਰ" className="btn btn-secondary w-50" onClick={() => { setEditingId(null); setFormData({ deviceId: '', name: '', deviceType: '', room: '', brand: '', model: '', quantity: 1, status: 'Đang sử dụng', description: '' }); }}>
+                <button type="button" className="btn btn-secondary w-50" onClick={() => { setEditingId(null); setFormData({ deviceId: '', name: '', deviceType: '', room: '', brand: '', model: '', quantity: 1, status: 'Đang sử dụng', description: '' }); }}>
                   Hủy
                 </button>
               )}
