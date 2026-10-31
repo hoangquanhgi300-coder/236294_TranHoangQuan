@@ -7,8 +7,10 @@ const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000')
   .replace(/\/api.*$/, '')
   .replace(/\/+$/, '');
 
-// Tất cả request đều đi qua một đường dẫn duy nhất: /api/students
+// Lấy danh sách: GET /api/students
 const API_URL = `${API_BASE}/api/students`;
+// Thêm, sửa, xóa: /api/devices
+const DEVICES_URL = `${API_BASE}/api/devices`;
 
 const EMPTY_FORM = {
   deviceId: '', name: '', deviceType: '', room: '', brand: '', model: '', quantity: 1, status: 'Đang sử dụng', description: ''
@@ -54,10 +56,10 @@ function App() {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`${API_URL}/${editingId}`, formData);
+        await axios.put(`${DEVICES_URL}/${editingId}`, formData);
         alert('Cập nhật thiết bị thành công!');
       } else {
-        await axios.post(API_URL, formData);
+        await axios.post(DEVICES_URL, formData);
         alert('Thêm thiết bị mới thành công!');
       }
       setFormData(EMPTY_FORM);
@@ -72,7 +74,7 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa thiết bị này không?')) {
       try {
-        await axios.delete(`${API_URL}/${id}`);
+        await axios.delete(`${DEVICES_URL}/${id}`);
         fetchDevices();
       } catch (err) {
         alert('Xóa thất bại: ' + err.message);
