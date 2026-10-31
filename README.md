@@ -34,3 +34,12 @@ npm install
 npm run dev
 ```
 Hoàn thành tạo database Câu 2
+## Hướng dẫn chạy Backend bằng Docker
+1. Kéo Docker image từ Docker Hub:
+   \`\`\`bash
+   docker pull hoangquan21102005/device-backend:latest
+   \`\`\`
+2. Chạy container với biến môi trường MongoDB:
+   \`\`\`bash
+   docker run -d -p 5000:5000 -e MONGO_URI="mongodb+srv://hoangquan:hoangquan2005@cluster0.vnprtks.mongodb.net/236294_TranHoangQuan?appName=Cluster0" hoangquan21102005/device-backend:latest
+   \`\`\`
