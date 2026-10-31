@@ -47,3 +47,5 @@ Hoàn thành tạo database Câu 2
 1. Kéo Docker image từ Docker Hub:
    ```bash
    docker pull hoangquan21102005/device-frontend:latest
+## Link Triển Khai (Live Demo)
+- Frontend URL: `https://two36294-tranhoangquan-frontend.onrender.com`
